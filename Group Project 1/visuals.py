@@ -72,11 +72,16 @@ class SortingVisualizer(QMainWindow):
             self.selectionSort()
         elif selectedAlgo == "Insertion Sort":
             self.insertionSort()
-
+    """
+    Function togglePause: explain what is happening
+	"""
     def togglePause(self):
-        """ Toggles between pausing and resuming sorting """
         self.isPaused = not self.isPaused
         self.pauseButton.setText("Resume" if self.isPaused else "Pause")
+
+# Sean ^
+# ___________________________________________________________________________________________________________________________________________________________________________________
+# Josephine \/
 
     def endSorting(self):
         """ Stops sorting immediately """
@@ -93,6 +98,7 @@ class SortingVisualizer(QMainWindow):
             if self.isStopped:
                 return False
         return True
+    
 
     def bubbleSort(self):
         """ Bubble Sort Visualization with Pause/Stop Support """
