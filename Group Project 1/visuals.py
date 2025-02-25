@@ -83,15 +83,19 @@ class SortingVisualizer(QMainWindow):
 # ___________________________________________________________________________________________________________________________________________________________________________________
 # Josephine \/
 
-    def endSorting(self):
-        """ Stops sorting immediately """
+    def endSortingtwo(self):
+        """ 
+        stops sorting instantly, resets the pause button, and updates the UI 
+        """
         self.isStopped = True
         self.isPaused = False
-        self.pauseButton.setText("Pause")  # Reset button text
-        self.drawBars()  # Refresh UI
+        self.pauseButton.setText("Pause")
+        self.drawBars()
 
     def waitForResume(self):
-        """ Pauses sorting until resumed or stopped """
+        """
+        pauses the sorting until it resumes/stops
+        """
         while self.isPaused:
             QApplication.processEvents()
             time.sleep(0.1)
@@ -101,7 +105,9 @@ class SortingVisualizer(QMainWindow):
     
 
     def bubbleSort(self):
-        """ Bubble Sort Visualization with Pause/Stop Support """
+        """
+        visualizes bubble sort w/ options to pause/stop sorting process 
+        """
         for i in range(len(self.array) - 1):
             for j in range(len(self.array) - 1 - i):
                 if self.isStopped:
@@ -119,7 +125,9 @@ class SortingVisualizer(QMainWindow):
         self.drawBars(["green"] * self.numElements)  # Final sorted color
 
     def selectionSort(self):
-        """ Selection Sort Visualization with Pause/Stop Support """
+        """ 
+        visualizes selection sort and can pause/stop at any time
+        """
         for i in range(len(self.array)):
             if self.isStopped:
                 return
@@ -140,7 +148,9 @@ class SortingVisualizer(QMainWindow):
         self.drawBars(["green"] * self.numElements)
 
     def insertionSort(self):
-        """ Insertion Sort Visualization with Pause/Stop Support """
+        """
+        insertion sort visualization with pause/stop ability
+        """
         for i in range(1, len(self.array)):
             if self.isStopped:
                 return
