@@ -1,6 +1,6 @@
 import random
 import time
-
+from bargraph import displayBarGraph
 
 class Algorithms:
     def __init__(self, lower_bound, upper_bound, array_size, manual_array, target_element=None, input_type=None):
@@ -259,6 +259,7 @@ class Algorithms:
         print(f"Linear Sort Time: {(end_time - start_time) * 1000:.30f}")
         print(f"Time taken array {self.timeTaken}")
 
+        displayBarGraph(self.timeTaken) 
 
 # Example usage:
 if __name__ == "__main__":

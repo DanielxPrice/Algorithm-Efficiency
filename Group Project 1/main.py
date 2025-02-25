@@ -11,6 +11,7 @@ from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import QColor, QPainter
 from sortingAlgorithms import Algorithms as myAlgorithms
 
+
 WIDTH = 1000
 HEIGHT = 700
 
@@ -122,6 +123,9 @@ class MyWindow(QWidget):
             border-radius: 10px;
         """)
 
+        '''
+        ALL EVENTS FOR IF GENERATE IS CLICKED
+        '''
         self.generateButton.clicked.connect(self.onGenerate)
 
         # Layout
@@ -176,7 +180,6 @@ class MyWindow(QWidget):
     '''
     def onGenerate(self):
         input_type = self.inputTypeComboBox.currentText()
-        
         if input_type == "Random":
             try:
                 # Get values from the UI
@@ -189,8 +192,8 @@ class MyWindow(QWidget):
                 random_algo = myAlgorithms(lower_bound, upper_bound, array_size, [], input_type="Random")
                 random_algo.random_choice()
                 print(f"[DEBUG] Random array before sorting: {random_algo.random_array}")
-                random_algo.run()            
-
+                random_algo.run()           
+                self.inputTypeComboBox.setCurrentText("Select Input Type")
             except ValueError:
                 print("Please enter valid integer values.")
 
@@ -204,8 +207,10 @@ class MyWindow(QWidget):
                 # Create an instance of the algorithms class with the manual values
                 manual_algo = myAlgorithms(0, 0, 0, manual_array, target, input_type)
                 manual_algo.run()
+                self.inputTypeComboBox.setCurrentText("Select Input Type")
+
             except ValueError:
-                print("Please enter valid values for the array and target.")
+                print("Please enter valid values for the array and target.") 
 
         else:
             print("Please select a valid input type (Random or Manual).")
