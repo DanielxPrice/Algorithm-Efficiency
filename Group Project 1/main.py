@@ -2,7 +2,8 @@
 Group Project 1
 Authors:
 Daniel Price
-
+Josephine Choi
+Sean Defrank
 '''
 import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox
@@ -186,6 +187,9 @@ class MyWindow(QWidget):
 
                 # Create an instance of the algorithms class with random values
                 random_algo = myAlgorithms(lower_bound, upper_bound, array_size, [], input_type="Random")
+                random_algo.random_choice()
+                print(f"[DEBUG] Random array before sorting: {random_algo.random_array}")
+                random_algo.run()            
 
             except ValueError:
                 print("Please enter valid integer values.")
@@ -195,12 +199,11 @@ class MyWindow(QWidget):
                 # Get manual input (comma-separated values)
                 manual_array = list(map(int, self.manualInputTextBox.text().split(',')))
                 target = int(self.targetTextBox.text())
-                print(f"Manual array: {manual_array}, Target: {target}")
+                # print(f"Manual array: {manual_array}, Target: {target}")
 
                 # Create an instance of the algorithms class with the manual values
-                manual_algo = myAlgorithms(lower_bound=None, upper_bound=None, array_size=None, 
-                                        manual_array=manual_array, target_element=target, input_type="Manual")
-
+                manual_algo = myAlgorithms(0, 0, 0, manual_array, target, input_type)
+                manual_algo.run()
             except ValueError:
                 print("Please enter valid values for the array and target.")
 
