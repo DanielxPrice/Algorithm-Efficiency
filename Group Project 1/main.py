@@ -10,6 +10,9 @@ from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButto
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import QColor, QPainter
 from sortingAlgorithms import Algorithms as myAlgorithms
+import subprocess
+import visuals
+import os
 
 
 WIDTH = 1000
@@ -195,6 +198,11 @@ class MyWindow(QWidget):
                 print(f"[DEBUG] Random array before sorting: {random_algo.random_array}")
                 random_algo.run()           
                 self.inputTypeComboBox.setCurrentText("Select Input Type")
+                
+                current_directory = os.path.dirname(os.path.realpath(__file__))
+                visuals_path = os.path.join(current_directory, "visuals.py")
+                subprocess.Popen([sys.executable, visuals_path])
+
             except ValueError:
                 print("Please enter valid integer values.")
 
