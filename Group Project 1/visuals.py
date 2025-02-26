@@ -13,17 +13,20 @@ class SortingVisualizer(QMainWindow):
         self.setWindowTitle("Sorting Algorithm Visualizer")
         self.setGeometry(100, 100, 800, 600)
 
-        # Create central widget and layout
+        
+
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
         layout = QVBoxLayout(self.centralWidget)
 
-        # Dropdown for sorting algorithm selection
+        #The dropdown menu for selecting with sorting method you want to use
         self.algoSelector = QComboBox(self)
-        self.algoSelector.addItems(["Bubble Sort", "Selection Sort", "Insertion Sort"])
+        self.algoSelector.addItems(["Bubble Sort", "Merge Sort", "Quick Sort", "Radix Sort", "Linear Search"])
         layout.addWidget(self.algoSelector)
 
-        # Buttons
+
+
+        #Our buttons for selection, Start Sorting, Pause, and End Sorting
         self.startButton = QPushButton("Start Sorting", self)
         self.startButton.clicked.connect(self.runSorting)
         layout.addWidget(self.startButton)
@@ -33,26 +36,30 @@ class SortingVisualizer(QMainWindow):
         layout.addWidget(self.pauseButton)
 
         self.endButton = QPushButton("End Sorting", self)
-        self.endButton.clicked.connect(self.endSorting)
+        self.endButton.clicked.connect(self.endSortingtwo)
         layout.addWidget(self.endButton)
+
+
 
         # Matplotlib figure and canvas
         self.figure, self.ax = plt.subplots(figsize=(8, 4))
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas)
 
-        # Sorting control flags
+        #Control flags
         self.isPaused = False
         self.isStopped = False
 
-        # Generate initial random array
+        #Generating the initial array
         self.numElements = 20
         self.array = np.random.randint(10, 100, self.numElements)
 
         self.drawBars()
 
+
+    #Drawing the bars. :)
     def drawBars(self, colors=None):
-        """ Updates the bar graph with new data """
+        #Updates bars
         self.ax.clear()
         if colors is None:
             colors = ["cyan"] * self.numElements  # Default color
@@ -61,24 +68,28 @@ class SortingVisualizer(QMainWindow):
         self.ax.set_title("Sorting Visualization")
         self.canvas.draw()
 
+
     def runSorting(self):
-        """ Runs the selected sorting algorithm with visualization """
+        #Choose which sorting algorithm you like, it'll run with visualization
         self.isStopped = False  # Reset stop flag
         selectedAlgo = self.algoSelector.currentText()
 
         if selectedAlgo == "Bubble Sort":
             self.bubbleSort()
-        elif selectedAlgo == "Selection Sort":
-            self.selectionSort()
-        elif selectedAlgo == "Insertion Sort":
-            self.insertionSort()
-    """
-    Function togglePause: explain what is happening
-	"""
+        elif selectedAlgo == "Merge Sort":
+            self.mergeSort()
+        elif selectedAlgo == "Quick Sort":
+            self.quickSort()
+        elif selectedAlgo == "Radix Sort":
+            self.radixSort()
+        elif selectedAlgo == "Linear Search":
+            self.linearSearch()
+  
+
+
     def togglePause(self):
         self.isPaused = not self.isPaused
         self.pauseButton.setText("Resume" if self.isPaused else "Pause")
-
 # Sean ^
 # ___________________________________________________________________________________________________________________________________________________________________________________
 # Josephine \/
@@ -103,7 +114,9 @@ class SortingVisualizer(QMainWindow):
                 return False
         return True
     
-
+    """
+    BUBBLE SORT
+    """
     def bubbleSort(self):
         """
         visualizes bubble sort w/ options to pause/stop sorting process 
@@ -124,53 +137,31 @@ class SortingVisualizer(QMainWindow):
 
         self.drawBars(["green"] * self.numElements)  # Final sorted color
 
-    def selectionSort(self):
-        """ 
-        visualizes selection sort and can pause/stop at any time
+    """
+    MERGE SORT
+    """
+    def mergeSort(self):
+        return
+
+
         """
-        for i in range(len(self.array)):
-            if self.isStopped:
-                return
-
-            minIndex = i
-            for j in range(i + 1, len(self.array)):
-                if self.array[j] < self.array[minIndex]:
-                    minIndex = j
-
-            self.array[i], self.array[minIndex] = self.array[minIndex], self.array[i]
-            self.drawBars(["red" if x == i or x == minIndex else "blue" for x in range(self.numElements)])
-            QApplication.processEvents()
-            time.sleep(0.1)
-
-            if not self.waitForResume():
-                return
-
-        self.drawBars(["green"] * self.numElements)
-
-    def insertionSort(self):
+        QUICK SORT
         """
-        insertion sort visualization with pause/stop ability
+    def quickSort(self):
+
+
         """
-        for i in range(1, len(self.array)):
-            if self.isStopped:
-                return
+        RADIX SORT
+        """
+    def radixSort(self):
 
-            key = self.array[i]
-            j = i - 1
-            while j >= 0 and key < self.array[j]:
-                self.array[j + 1] = self.array[j]
-                j -= 1
+        """
+        LINEAR SEARCH
+        """
+    def linearSearch(self):
+        return
+    
 
-                self.drawBars(["red" if x == j + 1 else "blue" for x in range(self.numElements)])
-                QApplication.processEvents()
-                time.sleep(0.1)
-
-                if not self.waitForResume():
-                    return
-
-            self.array[j + 1] = key
-
-        self.drawBars(["green"] * self.numElements)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -179,19 +170,3 @@ if __name__ == "__main__":
     sys.exit(app.exec())
 
 
-# import matplotlib.pyplot as plt
-
-# # Sample data
-# categories = ['A', 'B', 'C', 'D', 'E']
-# values = [10, 24, 36, 18, 30]
-
-# # Create a bar chart
-# plt.bar(categories, values, color='blue')
-
-# # Add labels and title
-# plt.xlabel('Categories')
-# plt.ylabel('Values')
-# plt.title('Sample Bar Graph')
-
-# # Show the graph
-# plt.show()

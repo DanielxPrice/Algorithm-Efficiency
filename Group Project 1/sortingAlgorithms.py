@@ -202,15 +202,15 @@ class Algorithms:
         return -1
     
 
-
+    
     def run(self):
+        # Bubble Sort
         start_time = 0
         end_time = 0
         while(self.timeTaken[0] == 0.0):
             start_time = time.time()
             self.bubble_sort()
             end_time = time.time()
-            # Bubble Sort
             self.timeTaken[0] = (end_time - start_time) * 1000
         
         print(f"Bubble Sort Time: {(end_time - start_time) * 1000:.30f}")

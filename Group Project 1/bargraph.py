@@ -6,9 +6,9 @@ def displayBarGraph(array):
     values = array
 
     # Set the dark background
-    plt.figure(facecolor='#2E3440')  # Background of entire figure
+    plt.figure(facecolor='#2E3440')  
     ax = plt.gca()
-    ax.set_facecolor('#2E3440')  # Background of the plot area
+    ax.set_facecolor('#2E3440')  
 
     # Create a bar chart with custom colors
     bar_colors = ['#5E81AC', '#88C0D0', '#81A1C1', '#B48EAD', '#A3BE8C']
@@ -22,7 +22,7 @@ def displayBarGraph(array):
     # Adjust y-axis scale for better visibility
     plt.ylim(0, max(values) * 1.2)
 
-    # Add grid lines for better readability
+    # Add grid lines
     plt.grid(axis='y', linestyle='--', alpha=0.5, color='white')
 
     # Set tick colors

@@ -19,6 +19,7 @@ class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
 
+        
         self.setWindowTitle("My Project")
         self.setGeometry(100, 100, WIDTH, HEIGHT)
         self.setStyleSheet("background-color: #2E3440;")  # Dark mode background
