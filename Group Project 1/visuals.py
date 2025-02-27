@@ -11,25 +11,46 @@ class SortingVisualizer(QMainWindow):
         super().__init__()
    
 
-        # Attempt at passing data
+        # Modern stylesheet for better looking UI
+        self.setStyleSheet("""
+            QPushButton {
+                background-color: #0078D7;
+                color: white;
+                border-radius: 5px;
+                padding: 8px;
+                font-size: 14px;
+            }
+            QPushButton:hover {
+                background-color: #005A9E;
+            }
+            QComboBox {
+                padding: 5px;
+                border: 1px solid gray;
+                border-radius: 5px;
+            }
+            QMainWindow {
+                background-color: #2E3440;
+            }
+        """)
+
+
+        # Error checking for passing data through the files
         if len(sys.argv) != 6:
             print("Usage: visuals.py <arraySize> <lowerBound> <upperBound>")
             return
 
         try:
-            # Read input values from command-line arguments
+            # Read values given from main.py in the form of command-line arguments
             self.arraySize = int(sys.argv[1])
             self.lowerBound = int(sys.argv[2])
             self.upperBound = int(sys.argv[3])
             self.manualArray = list(map(int, sys.argv[4].split(',')))
             self.permManualArray = list(map(int, sys.argv[4].split(',')))
-            #manualArray = int(sys.argv[4])
+            
             self.targetElement =  int(sys.argv[5])
-            #print(manualArray)
-            # Display received values (replace this with actual visualization logic)
             print(f"Received values: arraySize={self.arraySize}, lowerBound={self.lowerBound}, upperBound={self.upperBound}, manualArray={self.manualArray}, targetElement={self.targetElement}")
             print(f"2 This is manual array {self.manualArray}")
-            # TODO: Implement sorting visualization logic using the received values
+           
 
         except ValueError:
             print("Invalid input. Please ensure all inputs are integers.")
@@ -38,7 +59,7 @@ class SortingVisualizer(QMainWindow):
         
 
 
-        
+        # Menu-ing buttons, drop down menus, name of visualizer
         self.setWindowTitle("Sorting Algorithm Visualizer")
         self.setGeometry(100, 100, 800, 600)
 
@@ -79,6 +100,7 @@ class SortingVisualizer(QMainWindow):
             self.numElements = len(self.manualArray)
         else:
             self.array = [random.randint(self.lowerBound, self.upperBound) for _ in range(self.numElements)]
+            self.targetElement = np.random.choice(self.array)
 
         print(f"This is the array {self.array} of type: {type(self.array)}")
         self.drawBars()
@@ -88,15 +110,22 @@ class SortingVisualizer(QMainWindow):
 
 
 
-
+    # Function that draws the visualizer, decides it's colors, axis, updates UI whenever called
     def drawBars(self, colors=None):
         self.ax.clear()
+        
+        self.ax.set_facecolor("#2E3440")
         if colors is None:
-            colors = ["cyan"] * self.numElements
+            colors = ["#4E7F7A"] * self.numElements # Color of the bars, in this case, teal green
         self.ax.bar(range(len(self.array)), self.array, color=colors)
         self.ax.set_title("Sorting Visualization")
+        
+        self.ax.tick_params(axis="x", colors="black")
+        self.ax.tick_params(axis="y", colors="black")
+
         self.canvas.draw()
 
+    # Function used to connect the visualizer to the sorting functions once input is chosen
     def runSorting(self):
         self.isStopped = False
         selectedAlgo = self.algoSelector.currentText()
@@ -112,27 +141,22 @@ class SortingVisualizer(QMainWindow):
         elif selectedAlgo == "Linear Search":
             self.linearSearch()
 
+    # Pauses, changes Pause button to Resume if Pause is pressed
     def togglePause(self):
         self.isPaused = not self.isPaused
         self.pauseButton.setText("Resume" if self.isPaused else "Pause")
 
+    # Stops all sorting, resets the pause button, UI will be updated
     def endSorting(self):
-        """ 
-        stops sorting instantly, resets the pause button, and updates the UI 
-        """
+      
         self.isStopped = True
         self.isPaused = False
         self.pauseButton.setText("Pause")
         self.drawBars()
         
-    # def resetSorting(self):
-    #     self.isStopped = True
-    #     self.isPaused = False
-    #     self.pauseButton.setText("Pause")
-    #     self.drawBars()
 
+    # Resets the sorting visualizer to its original state so all sorting algos can be tested
     def resetSorting(self):
-        """ Resets the sorting visualizer to its original state """
         self.isStopped = True
         self.isPaused = False
         self.pauseButton.setText("Pause")
@@ -141,14 +165,11 @@ class SortingVisualizer(QMainWindow):
             self.array = self.permManualArray.copy() 
         else:  
             self.array = [random.randint(self.lowerBound, self.upperBound) for _ in range(self.numElements)]
-
+            self.targetElement = np.random.choice(self.array)
         self.drawBars()
 
-
+    # Pauses the sorting until it resumes or stops
     def waitForResume(self):
-        """
-        pauses the sorting until it resumes/stops
-        """
         while self.isPaused:
             QApplication.processEvents()
             time.sleep(0.1)
@@ -157,10 +178,12 @@ class SortingVisualizer(QMainWindow):
         return True
 
 
+    """
+    BUBBLE SORT
+    """
+
+    # The visualizer for bubble sort, includes options to pause/stop during the process
     def bubbleSort(self):
-        """
-        visualizes bubble sort w/ options to pause/stop sorting process 
-        """
         for i in range(len(self.array) - 1):
             for j in range(len(self.array) - 1 - i):
                 if self.isStopped:
@@ -174,13 +197,19 @@ class SortingVisualizer(QMainWindow):
                     QApplication.processEvents()
                     time.sleep(0.1)
 
-                # Check if the algorithm should pause/stop
+                # Should we pause and stop?
                 if not self.waitForResume():
                     return
 
         self.drawBars(["green"] * self.numElements)
 
 
+
+
+
+    """
+    MERGE SORT
+    """
 
     def mergeSort(self, left, right):
         if left < right:
@@ -189,30 +218,28 @@ class SortingVisualizer(QMainWindow):
             
             mid = (left + right) // 2
             
-            # Recursively sort the left and right halves
+            # Use recursion to sort both left and right halves
             self.mergeSort(left, mid)
             self.mergeSort(mid + 1, right)
             
-            # Visualize the merge process (merge step without actually merging)
+            
             self.visualizeMerge(left, mid, right)
             
-            # Check if the algorithm should pause/stop
+            # Should we pause and stop?
             if not self.waitForResume():
                 return
-
+            
+    # A visualizer for Merge during the merging step, which doesn't change the actual array
     def visualizeMerge(self, left, mid, right):
-        """
-        Visualizes the merge process where elements are ordered from smallest to largest
-        during the merge step, without changing the actual array.
-        """
+     
         if self.isStopped:
             return
         
-        # Create temporary arrays for the left and right halves
+        # Temp arrays for both halves
         left_half = self.array[left:mid+1]
         right_half = self.array[mid+1:right+1]
         
-        # Temporary merged array (this is what we would visualize)
+        # Temporary merged array (this is what we visualize)
         merged = []
         i, j = 0, 0
         
@@ -235,10 +262,10 @@ class SortingVisualizer(QMainWindow):
             merged.append(right_half[j])
             j += 1
         
-        # Visualize the "merged" array
+        # Visualize the complete merged array of both halves
         merged_index = 0
         for k in range(left, right + 1):
-            # Color elements from the merged array as "yellow"
+            # Coloring the elements as yellow once completed to help differentiate
             if merged_index < len(merged):
                 self.array[k] = merged[merged_index]
                 merged_index += 1
@@ -249,7 +276,7 @@ class SortingVisualizer(QMainWindow):
         QApplication.processEvents()
         time.sleep(0.1)
         
-        # Check if the algorithm should pause/stop
+        # Should we pause and stop?
         if not self.waitForResume():
             return
         
@@ -259,6 +286,9 @@ class SortingVisualizer(QMainWindow):
         time.sleep(0.1)
 
 
+    """
+    QUICK SORT
+    """
 
     def quickSort(self, low, high):
         if low < high:
@@ -268,6 +298,8 @@ class SortingVisualizer(QMainWindow):
                 return  # Avoid recursion if partition fails & recursively sort the two halves
             self.quickSort(low, pivot - 1)
             self.quickSort(pivot + 1, high)
+        self.drawBars(["green"] * self.numElements)
+
 
     def partition(self, low, high):
         pivot = self.array[high]
@@ -276,14 +308,14 @@ class SortingVisualizer(QMainWindow):
             if self.isStopped:
                 return
 
-            # Visualize the comparison: red for the current element and pivot
+                # Visualize the comparison: red for the current element and pivot
             self.drawBars(["red" if x == j else "orange" if x == high else "blue" for x in range(self.numElements)])
 
             if self.array[j] < pivot:
                 i += 1
                 self.array[i], self.array[j] = self.array[j], self.array[i]
 
-                # Highlight swapped elements in yellow
+                    # Highlight swapped elements in yellow
                 self.drawBars(["yellow" if x == i or x == j else "blue" for x in range(self.numElements)])
                 QApplication.processEvents()
                 time.sleep(0.1)
@@ -291,10 +323,10 @@ class SortingVisualizer(QMainWindow):
             if not self.waitForResume():
                 return
 
-        # Swap the pivot into the correct position
+            # Swap the pivot into the correct position
         self.array[i + 1], self.array[high] = self.array[high], self.array[i + 1]
 
-        # Highlight the pivot placement in green
+            # Highlight the pivot placement in green
         self.drawBars(["green" if x == i + 1 else "blue" for x in range(self.numElements)])
         QApplication.processEvents()
         time.sleep(0.1)
@@ -303,46 +335,110 @@ class SortingVisualizer(QMainWindow):
 
 
 
+
     """
-    Pause doesnt work
+    RADIX SORT
     """
+    # def radixSort(self):
+    #     max_val = max(self.array)
+    #     exp = 1
+    #     while max_val // exp > 0:
+    #         self.countingSort(exp)
+    #         exp *= 10
+
+    # def countingSort(self, exp):
+    #     output = [0] * len(self.array)
+    #     count = [0] * 10
+
+    #     for num in self.array:
+    #         index = (num // exp) % 10
+    #         count[index] += 1
+
+    #     for i in range(1, 10):
+    #         count[i] += count[i - 1]
+
+    #     for i in range(len(self.array) - 1, -1, -1):
+    #         index = (self.array[i] // exp) % 10
+    #         output[count[index] - 1] = self.array[i]
+    #         count[index] -= 1
+
+    #         self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
+    #         QApplication.processEvents()
+    #         time.sleep(0.1)
+
+    #     for i in range(len(self.array)):
+    #         self.array[i] = output[i]
+    #         self.drawBars()
+    #         QApplication.processEvents()
+    #         time.sleep(0.1)
     def radixSort(self):
-        max_val = max(self.array)
-        exp = 1
+        max_val = max(self.array)  # Get the maximum value in the array to determine the number of digits
+        exp = 1  # Start with the least significant digit (LSD)
+        
+        # Run the countingSort for each digit (LSD to MSD)
         while max_val // exp > 0:
-            self.countingSort(exp)
-            exp *= 10
+            self.countingSort(exp)  # Sort the array by the current digit (exp is the digit place)
+            exp *= 10  # Move to the next digit place
+        self.drawBars(["green"] * self.numElements) #?????? WORKSSSS
+
 
     def countingSort(self, exp):
-        output = [0] * len(self.array)
-        count = [0] * 10
+        output = [0] * len(self.array)  # Output array that will hold the sorted values
+        count = [0] * 10  # Count array to store the frequency of digits (0-9)
 
+        # Count the occurrences of each digit
         for num in self.array:
-            index = (num // exp) % 10
+            index = (num // exp) % 10  # Get the digit at the current place value
             count[index] += 1
 
+        # Update the count array so that each element at each index holds the sum of previous counts
         for i in range(1, 10):
             count[i] += count[i - 1]
 
-        for i in range(len(self.array) - 1, -1, -1):
-            index = (self.array[i] // exp) % 10
-            output[count[index] - 1] = self.array[i]
-            count[index] -= 1
+        # Build the output array by placing the elements in the correct order
+        for i in range(len(self.array) - 1, -1, -1):  # Traverse the array in reverse order
+            num = self.array[i]
+            index = (num // exp) % 10  # Get the digit at the current place value
+            output[count[index] - 1] = num  # Place the element in the output array
+            count[index] -= 1  # Decrease the count of the digit
 
+            # Visualize the process: highlight the element being processed
             self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
-            QApplication.processEvents()
+            QApplication.processEvents()  # Update the GUI
+            if not self.waitForResume():  # Pause/Stop condition
+                return
             time.sleep(0.1)
 
+        # Copy the sorted elements from the output array back to the original array
         for i in range(len(self.array)):
             self.array[i] = output[i]
-            self.drawBars()
+            self.drawBars()  # Redraw the bars after each pass
             QApplication.processEvents()
+            if not self.waitForResume():  # Pause/Stop condition
+                return
             time.sleep(0.1)
 
-
+    """
+    LINEAR SEARCH
+    """
+    # def linearSearch(self):
+    #     target = self.targetElement
+    #     for i in range(len(self.array)):
+    #         if self.array[i] == target:
+    #             self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
+    #             QApplication.processEvents()
+    #             time.sleep(0.5)
+    #             return
+    #         else:
+    #             self.drawBars(["yellow" if x == i else "blue" for x in range(self.numElements)])
+    #             QApplication.processEvents()
+    #             time.sleep(0.1)
+    #     self.drawBars()
     def linearSearch(self):
         target = self.targetElement
         for i in range(len(self.array)):
+            if self.isStopped:
+                return
             if self.array[i] == target:
                 self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
                 QApplication.processEvents()
@@ -352,6 +448,8 @@ class SortingVisualizer(QMainWindow):
                 self.drawBars(["yellow" if x == i else "blue" for x in range(self.numElements)])
                 QApplication.processEvents()
                 time.sleep(0.1)
+            if not self.waitForResume():
+                return
         self.drawBars()
 
 if __name__ == "__main__":

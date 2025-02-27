@@ -18,11 +18,14 @@ import os
 WIDTH = 1000
 HEIGHT = 700
 
+"""
+MAIN WINDOW FOR TAKING USER INPUT
+"""
 class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        
+        # Sets up the window title, size, and the color
         self.setWindowTitle("My Project")
         self.setGeometry(100, 100, WIDTH, HEIGHT)
         self.setStyleSheet("background-color: #2E3440;")  # Dark mode background
@@ -69,7 +72,7 @@ class MyWindow(QWidget):
         """)
         self.inputTypeComboBox.currentTextChanged.connect(self.onInputTypeChanged)
 
-        # Create the first text box for random array size (only visible for random)
+        # Create the first text box for random array size 
         self.firstTextBox = QLineEdit(self)
         self.firstTextBox.setPlaceholderText("Enter size of array...")
         self.firstTextBox.setStyleSheet("""
@@ -79,7 +82,7 @@ class MyWindow(QWidget):
             font-size: 16px;
         """)
 
-        # Create the lower and upper bound text boxes (only visible for random)
+        # Create the lower and upper bound text boxes 
         self.lowerBoundTextBox = QLineEdit(self)
         self.lowerBoundTextBox.setPlaceholderText("Enter lower bound...")
         self.lowerBoundTextBox.setStyleSheet("""
@@ -98,7 +101,7 @@ class MyWindow(QWidget):
             font-size: 16px;
         """)
 
-        # Create text boxes for manual input (only visible for manual)
+        # Create text boxes for manual input 
         self.manualInputTextBox = QLineEdit(self)
         self.manualInputTextBox.setPlaceholderText("Enter array (comma-separated)...")
         self.manualInputTextBox.setStyleSheet("""
@@ -132,7 +135,7 @@ class MyWindow(QWidget):
         '''
         self.generateButton.clicked.connect(self.onGenerate)
 
-        # Layout
+        # Layout: This adds all these buttons to the window
         layout = QVBoxLayout()
         layout.addWidget(self.titleLabel)
         layout.addWidget(self.inputTypeComboBox)
@@ -147,7 +150,7 @@ class MyWindow(QWidget):
 
         self.setLayout(layout)
 
-        self.onInputTypeChanged(self.inputTypeComboBox.currentText())  # Call to hide/show based on default
+        self.onInputTypeChanged(self.inputTypeComboBox.currentText())  
 
     def onInputTypeChanged(self, input_type):
         # Hide or show widgets based on selected input type
@@ -171,16 +174,8 @@ class MyWindow(QWidget):
             self.targetTextBox.hide()
 
     '''
-    This is where the logic is. onGenerate()
-
-    The rest of the code in the file is ui stuff. 
-    The ui is not done yet. We need to redirect to another page and display the visual.
-    We can do that with hide() or
-    We can probably just open a new window so if the user wants to switch their choices, they just press x.
-    We then use matplotlib or pygame as the other window
-    We pass in the info to the class using matplotlib or pygame and display in the new window/s
-    
-    
+    onGenerate(): out main logic function for this class. It takes in the userinput and create objects that will be used for
+    calculating the time complexity. It also calls a subprocess to display the live visuals.
     '''
     def onGenerate(self):
         input_type = self.inputTypeComboBox.currentText()

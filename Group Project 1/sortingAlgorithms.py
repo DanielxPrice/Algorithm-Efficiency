@@ -4,6 +4,7 @@ from bargraph import displayBarGraph
 
 class Algorithms:
     def __init__(self, lower_bound, upper_bound, array_size, manual_array, target_element=None, input_type=None):
+        # Initializing the class variables
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
         self.array_size = array_size
@@ -13,7 +14,7 @@ class Algorithms:
         self.timeTaken = [0] * 5
         self.random_array = []
 
-        
+    
     def generate_array(self):
         # Generate a random array based on the given size and bounds
         random_array = [random.randint(self.lower_bound, self.upper_bound) for _ in range(self.array_size)]
@@ -45,6 +46,7 @@ class Algorithms:
                     swapped = True
             if not swapped: 
                 break
+       # This is for testing purposes
        # print(f"This is my array after sorting: {myArray}")
 
 
@@ -52,8 +54,6 @@ class Algorithms:
     """
     MERGE SORT
     """
-
-    
     def merge_sort(self):
         
         if self.input_type == "Random":
@@ -97,14 +97,9 @@ class Algorithms:
 
         merge_sort_recursive(array)  # Calling the inner function (so it works)
 
-
-
-
-
     """
     QUICK SORT
     """
-
     def quick_sort(self):
         # Choose which array to sort based on input type
         if self.input_type == "Random":
@@ -138,7 +133,6 @@ class Algorithms:
     """
     RADIX SORT
     """
-
     def radix_sort(self):
         """Performs Radix Sort on self.random_array or self.manual_array (only for integers)."""
         if self.input_type == "Random":
@@ -187,9 +181,9 @@ class Algorithms:
             exp *= 10
 
 
-
-
-    # Placeholder for Linear Search
+    """
+    LINEAR SORT
+    """
     def linear_search(self):
         if self.input_type == "Random":
             if not self.random_array:  
@@ -204,7 +198,10 @@ class Algorithms:
         return -1
     
 
-    
+    """
+    run(): This actaully runs all the algorithms and gets their time complexity and stores it into an array.
+    This array is then sent to displayBarGraph() so that we can see a comparative bar graph.
+    """
     def run(self):
         # Bubble Sort
         start_time = 0
