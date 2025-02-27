@@ -17,11 +17,12 @@ class Algorithms:
     def generate_array(self):
         # Generate a random array based on the given size and bounds
         random_array = [random.randint(self.lower_bound, self.upper_bound) for _ in range(self.array_size)]
+        self.target_element = random.choice(random_array)
         return random_array
-    
     
     def random_choice(self):
         self.random_array = self.generate_array()
+        
 
 
     """
@@ -198,6 +199,7 @@ class Algorithms:
             myArray = self.manual_array[:]
         for index in range(len(myArray)):
             if myArray[index] == self.target_element:
+                #print("Linear search element at: " + str(index))
                 return index
         return -1
     

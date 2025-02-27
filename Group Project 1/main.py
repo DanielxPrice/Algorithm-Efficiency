@@ -199,9 +199,11 @@ class MyWindow(QWidget):
                 random_algo.run()           
                 self.inputTypeComboBox.setCurrentText("Select Input Type")
                 
+
                 current_directory = os.path.dirname(os.path.realpath(__file__))
                 visuals_path = os.path.join(current_directory, "visuals.py")
-                subprocess.Popen([sys.executable, visuals_path])
+                subprocess.Popen([sys.executable, visuals_path, str(array_size), str(lower_bound), str(upper_bound), "0", "0"])
+                #subprocess.Popen([sys.executable, visuals_path])
 
             except ValueError:
                 print("Please enter valid integer values.")
@@ -211,12 +213,17 @@ class MyWindow(QWidget):
                 # Get manual input (comma-separated values)
                 manual_array = list(map(int, self.manualInputTextBox.text().split(',')))
                 target = int(self.targetTextBox.text())
-                # print(f"Manual array: {manual_array}, Target: {target}")
+                #print(f"Manual array: {str(manual_array)}, Target: {target}")
 
                 # Create an instance of the algorithms class with the manual values
                 manual_algo = myAlgorithms(0, 0, 0, manual_array, target, input_type)
                 manual_algo.run()
                 self.inputTypeComboBox.setCurrentText("Select Input Type")
+
+                manual_array = self.manualInputTextBox.text()
+                current_directory = os.path.dirname(os.path.realpath(__file__))
+                visuals_path = os.path.join(current_directory, "visuals.py")
+                subprocess.Popen([sys.executable, visuals_path, "0", "0", "0", str(manual_array), str(target)])
 
             except ValueError:
                 print("Please enter valid values for the array and target.") 
