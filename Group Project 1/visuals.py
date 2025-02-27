@@ -239,7 +239,7 @@ class SortingVisualizer(QMainWindow):
         left_half = self.array[left:mid+1]
         right_half = self.array[mid+1:right+1]
         
-        # Temporary merged array (this is what we visualize)
+        
         merged = []
         i, j = 0, 0
         
@@ -265,7 +265,7 @@ class SortingVisualizer(QMainWindow):
         # Visualize the complete merged array of both halves
         merged_index = 0
         for k in range(left, right + 1):
-            # Coloring the elements as yellow once completed to help differentiate
+            # Coloring the elements as yellow once step is complete
             if merged_index < len(merged):
                 self.array[k] = merged[merged_index]
                 merged_index += 1
@@ -286,6 +286,12 @@ class SortingVisualizer(QMainWindow):
         time.sleep(0.1)
 
 
+
+
+
+
+
+
     """
     QUICK SORT
     """
@@ -295,7 +301,7 @@ class SortingVisualizer(QMainWindow):
             pivot = self.partition(low, high)
             if pivot is None:
                 print(f"Error: partition returned None. low={low}, high={high}")
-                return  # Avoid recursion if partition fails & recursively sort the two halves
+                return  # Let's avoid recursion if the partition fails recursively sort the two halves
             self.quickSort(low, pivot - 1)
             self.quickSort(pivot + 1, high)
         self.drawBars(["green"] * self.numElements)
@@ -308,7 +314,7 @@ class SortingVisualizer(QMainWindow):
             if self.isStopped:
                 return
 
-                # Visualize the comparison: red for the current element and pivot
+                # Visualize the comparison: red for the current element as well as the pivot
             self.drawBars(["red" if x == j else "orange" if x == high else "blue" for x in range(self.numElements)])
 
             if self.array[j] < pivot:
@@ -323,15 +329,16 @@ class SortingVisualizer(QMainWindow):
             if not self.waitForResume():
                 return
 
-            # Swap the pivot into the correct position
+            # Swappin' the pivot into the correct position
         self.array[i + 1], self.array[high] = self.array[high], self.array[i + 1]
 
-            # Highlight the pivot placement in green
+            # Highlightin' the pivot placement in green
         self.drawBars(["green" if x == i + 1 else "blue" for x in range(self.numElements)])
         QApplication.processEvents()
         time.sleep(0.1)
 
-        return i + 1  # Return the pivot index
+        return i + 1  # Returnin' the pivot index
+
 
 
 
@@ -339,77 +346,46 @@ class SortingVisualizer(QMainWindow):
     """
     RADIX SORT
     """
-    # def radixSort(self):
-    #     max_val = max(self.array)
-    #     exp = 1
-    #     while max_val // exp > 0:
-    #         self.countingSort(exp)
-    #         exp *= 10
-
-    # def countingSort(self, exp):
-    #     output = [0] * len(self.array)
-    #     count = [0] * 10
-
-    #     for num in self.array:
-    #         index = (num // exp) % 10
-    #         count[index] += 1
-
-    #     for i in range(1, 10):
-    #         count[i] += count[i - 1]
-
-    #     for i in range(len(self.array) - 1, -1, -1):
-    #         index = (self.array[i] // exp) % 10
-    #         output[count[index] - 1] = self.array[i]
-    #         count[index] -= 1
-
-    #         self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
-    #         QApplication.processEvents()
-    #         time.sleep(0.1)
-
-    #     for i in range(len(self.array)):
-    #         self.array[i] = output[i]
-    #         self.drawBars()
-    #         QApplication.processEvents()
-    #         time.sleep(0.1)
+    
     def radixSort(self):
         max_val = max(self.array)  # Get the maximum value in the array to determine the number of digits
-        exp = 1  # Start with the least significant digit (LSD)
+        exp = 1  # Start with the least significant digit
         
         # Run the countingSort for each digit (LSD to MSD)
         while max_val // exp > 0:
-            self.countingSort(exp)  # Sort the array by the current digit (exp is the digit place)
+            self.countingSort(exp)  # Sort the array by the current digit
             exp *= 10  # Move to the next digit place
         self.drawBars(["green"] * self.numElements) #?????? WORKSSSS
 
 
     def countingSort(self, exp):
-        output = [0] * len(self.array)  # Output array that will hold the sorted values
-        count = [0] * 10  # Count array to store the frequency of digits (0-9)
+        output = [0] * len(self.array)  # Output array
+        count = [0] * 10  
 
         # Count the occurrences of each digit
         for num in self.array:
-            index = (num // exp) % 10  # Get the digit at the current place value
+            index = (num // exp) % 10  
             count[index] += 1
 
-        # Update the count array so that each element at each index holds the sum of previous counts
+        # Count array so each element at each index holds the sum of previous counts
         for i in range(1, 10):
             count[i] += count[i - 1]
 
         # Build the output array by placing the elements in the correct order
         for i in range(len(self.array) - 1, -1, -1):  # Traverse the array in reverse order
             num = self.array[i]
-            index = (num // exp) % 10  # Get the digit at the current place value
-            output[count[index] - 1] = num  # Place the element in the output array
-            count[index] -= 1  # Decrease the count of the digit
+            index = (num // exp) % 10  
+            output[count[index] - 1] = num  
+            count[index] -= 1  # Decreases count
 
             # Visualize the process: highlight the element being processed
             self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
-            QApplication.processEvents()  # Update the GUI
-            if not self.waitForResume():  # Pause/Stop condition
+            QApplication.processEvents()  
+            if not self.waitForResume():  
                 return
             time.sleep(0.1)
 
-        # Copy the sorted elements from the output array back to the original array
+        # Copies the sorted elements from the output array back to the original array
         for i in range(len(self.array)):
             self.array[i] = output[i]
             self.drawBars()  # Redraw the bars after each pass
@@ -418,22 +394,12 @@ class SortingVisualizer(QMainWindow):
                 return
             time.sleep(0.1)
 
+
+
     """
     LINEAR SEARCH
     """
-    # def linearSearch(self):
-    #     target = self.targetElement
-    #     for i in range(len(self.array)):
-    #         if self.array[i] == target:
-    #             self.drawBars(["red" if x == i else "blue" for x in range(self.numElements)])
-    #             QApplication.processEvents()
-    #             time.sleep(0.5)
-    #             return
-    #         else:
-    #             self.drawBars(["yellow" if x == i else "blue" for x in range(self.numElements)])
-    #             QApplication.processEvents()
-    #             time.sleep(0.1)
-    #     self.drawBars()
+    
     def linearSearch(self):
         target = self.targetElement
         for i in range(len(self.array)):
